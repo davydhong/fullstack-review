@@ -2,7 +2,7 @@ import React from 'react';
 
 const RepoDisp = ({ repo }) => (
 	<div>
-		<h4>{repo.name}</h4>
+		<a href={repo.html_url}>{repo.name}</a>
 	</div>
 );
 

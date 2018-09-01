@@ -9,7 +9,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			repos: [],
+			repos: []
 		};
 	}
 
@@ -32,9 +32,11 @@ class App extends React.Component {
 				<RepoList repos={this.state.repos} />
 				<Search onSearch={this.search.bind(this)} />
 				<div>
-					{this.state.repos.map(repo => (
-						<RepoDisp repo={repo} />
-					))}
+					{this.state.repos.map((repo, idx) => {
+						if (idx < 25) {
+							return <RepoDisp repo={repo} />;
+						}
+					})}
 				</div>
 			</div>
 		);
@@ -54,7 +56,7 @@ let postToServer = (obj, callback) => {
 		error: function(error) {
 			console.log('Post not Working');
 			console.error(error);
-		},
+		}
 	});
 };
 
@@ -67,7 +69,7 @@ let GetFromServer = callback => {
 		},
 		error: function(error) {
 			console.log(error);
-		},
+		}
 	});
 };
 
