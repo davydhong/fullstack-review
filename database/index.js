@@ -3,22 +3,22 @@ mongoose.connect('mongodb://localhost/fetcher');
 mongoose.set('autoIndex', false);
 
 let repoSchema = mongoose.Schema({
-	id: Number,
-	html_url: {
-		type: String,
-		unique: true,
-		index: true
-	},
-	name: String,
-	owner: {
-		login: String,
-		id: Number,
-		avatar_url: String,
-		html_url: String
-	},
-	description: String,
-	updated_at: Date,
-	size: Number
+  id: Number,
+  html_url: {
+    type: String,
+    unique: true,
+    index: true
+  },
+  name: String,
+  owner: {
+    login: String,
+    id: Number,
+    avatar_url: String,
+    html_url: String
+  },
+  description: String,
+  updated_at: Date,
+  size: Number
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
