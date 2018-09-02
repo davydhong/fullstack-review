@@ -12,6 +12,11 @@ class App extends React.Component {
 			repos: []
 		};
 	}
+	componentDidMount() {
+		GetFromServer(response => {
+			this.setState({ repos: response });
+		});
+	}
 
 	search(term) {
 		console.log(`${term} was searched`);
@@ -21,11 +26,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		if (this.state.repos.length === 0) {
-			GetFromServer(response => {
-				this.setState({ repos: response });
-			});
-		}
+		// NOTE: if the state reads that the current repo is empty, it will make get request to the server - which then talks to MongoDB.
 		return (
 			<div>
 				<h1>Github Fetcher</h1>

@@ -3,53 +3,53 @@ const path = require('path');
 const { getReposByUsername, getPublicRepos } = require('../helpers/github');
 var bodyParser = require('body-parser');
 const { Repo, repoSchema } = require('../database/index');
+
 let port = 1128;
 
 express()
 	.use(express.static(__dirname + '/../client/dist'))
 	.use(bodyParser.json())
+	.get('/repos', function(req, res) {
+		// console.log('---GET RECEIVED---');
+		let statusCode = 200;
+		getReposSaved(res, statusCode);
+	})
 	.post('/repos', function(req, res) {
 		console.log('---POST RECEIVED---');
-		// This route should take the github username provided
-
+		// This route takes the github username provided
 		// and get the repo information from the github API, then
 		// save the repo information in the database
+
+		// getReposByUsername is an ajax call to the Github API
 		getReposByUsername(req.body.id, repos => {
-			// var RepoToUse = repos.slice(0, 25);
+			// Repo is a mongoose model object.
 			Repo.insertMany(repos, err => {
 				if (err) {
 					console.error(err);
-					Repo.find()
-						.sort({ size: -1 })
-						.exec((err, data) => {
-							res.statusCode = 201;
-							res.send(data);
-						});
+					let statusCode = 201;
+					getReposSaved(res, statusCode);
 				} else {
-					Repo.find()
-						.sort({ size: -1 })
-						.exec((err, data) => {
-							// NOTE: was not able to create an index at schema creation. Had to do it async after model creation.
-							repoSchema.index({ html_url: 1, type: -1 }, { unique: true });
-							res.statusCode = 201;
-							res.send(data);
-						});
+					let statusCode = 201;
+					repoSchema.index({ html_url: 1, type: -1 }, { unique: true });
+					getReposSaved(res, statusCode, err => {
+						console.error('this ran');
+					});
 				}
 			});
 		});
 	})
-	.get('/repos', function(req, res) {
-		console.log('---GET RECEIVED---');
-		// check for DB to see there is an existing 25 data for the given user
-		// if the DB responds with 25, send the DB data
-		// if the DB responds with less than 25, augment from github
-		Repo.find()
-			.sort({ size: -1 })
-			.exec((err, data) => {
-				res.statusCode = 200;
-				res.send(data);
-			});
-	})
 	.listen(port, function() {
 		console.log(`listening on port ${port}`);
 	});
+
+var getReposSaved = function(res, statusCode, callback) {
+	Repo.find()
+		.sort({ updated_at: -1 })
+		.exec((err, data) => {
+			if (!err && !!callback) {
+				callback(err, data);
+			}
+			res.statusCode = statusCode;
+			res.send(data);
+		});
+};
