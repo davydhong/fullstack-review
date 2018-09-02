@@ -10,8 +10,8 @@ var $ = (jQuery = require('jquery')(window));
 let options = {
 	headers: {
 		'User-Agent': 'request',
-		Authorization: `token ${config.TOKEN}`,
-	},
+		Authorization: `token ${config.TOKEN}`
+	}
 };
 let getReposByUsername = (USERNAME, callback) => {
 	// parameter is defined in type=owner
@@ -24,7 +24,7 @@ let getReposByUsername = (USERNAME, callback) => {
 		},
 		error: function(error) {
 			console.log(error);
-		},
+		}
 	});
 };
 
@@ -38,7 +38,7 @@ let getPublicRepos = callback => {
 		},
 		error: function(error) {
 			console.log(error);
-		},
+		}
 	});
 };
 
